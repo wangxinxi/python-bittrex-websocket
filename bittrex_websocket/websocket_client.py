@@ -12,6 +12,7 @@ from ._queue_events import *
 from .constants import EventTypes, BittrexParameters, BittrexMethods, ErrorMessages, InfoMessages, OtherConstants
 from ._auxiliary import process_message, create_signature, clear_queue, identify_payload, BittrexConnection
 from ._abc import WebSocket
+import socket
 
 try:
     from cfscrape import create_scraper as Session
@@ -165,6 +166,9 @@ class BittrexSocket(WebSocket):
             # Commenting it for the time being. It should be handled in _handle_subscribe.
             # event = ReconnectEvent(None)
             # self.control_queue.put(event)
+        except socket.error as e:
+            logger.error(str(e) + " " + traceback.format_exc())
+            self.control_queue.put(ReconnectEvent(_get_err_msg(e)))
         except Exception as e:
             logger.error(ErrorMessages.UNHANDLED_EXCEPTION.format(_get_err_msg(e)))
             self.disconnect()
