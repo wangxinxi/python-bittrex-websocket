@@ -13,6 +13,7 @@ from .constants import EventTypes, BittrexParameters, BittrexMethods, ErrorMessa
 from ._auxiliary import process_message, create_signature, clear_queue, identify_payload, BittrexConnection
 from ._abc import WebSocket
 import socket
+import traceback
 
 try:
     from cfscrape import create_scraper as Session
